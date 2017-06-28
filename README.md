@@ -1,21 +1,22 @@
-### BuildImage
+### BuildImage:
 
-This program is for building docker images.
-You need give name of image as argument.
+This program is for building docker images.<br/>
+You need give name of image as argument.<br/>
 You can also add various parameters for extension:
+```
     -v          -- show build output for current image
     -vv         -- show build output for all building image (script automaticaly build also our baseimage if exists)
     -t [tag]    -- create tag after build
     -p          -- after build push to teamzeus dockerHub
 
-
+```
 
     Example:
         ./BuildImage -p -v -t 3.4 python        ## creates python image with tag 3.4 and push to dockerHub
 
 
 
-### dockerManager
+### dockerManager:
 
 You can run commands:
 
