@@ -1,0 +1,120 @@
+#!/bin/bash
+#
+#  Copyright (c) 2017 Martin Jablecnik
+#  Authors: Martin Jablečník  
+#  Description: Improved docker manager 
+#
+#
+
+set -e
+
+SCRIPT_PATH="`dirname \"$0\"`"
+OTHER_PARAMS="$(echo $@ | cut -d' ' -f3-) "
+IMAGE=$(echo $2 | sed -e "s/\///g")
+CONTAINER=$(echo $IMAGE | sed -e "s/-/_/g")_dev
+COMMAND=$1
+DOCKER_ID=teamzeus
+DEFAULT_TAG=latest
+
+if [[ -z $IMAGE ]]; then 
+    if [[ $COMMAND != init && $COMMAND != help ]]; then
+        echo "You must give minimal 2 arguments!!"
+        exit 1;
+    fi
+fi
+
+case $COMMAND in
+rm) 
+    docker rm $CONTAINER
+    ;;
+stop) 
+    docker stop $CONTAINER 
+    ;;
+kill) 
+    docker kill $CONTAINER && docker rm $CONTAINER
+    ;;
+run|start)
+    docker run $OTHER_PARAMS -P --name $CONTAINER -itd $DOCKER_ID/$IMAGE:$DEFAULT_TAG
+    sleep 2
+    docker exec -it $CONTAINER bash || echo -e '\n\n' && docker logs $CONTAINER
+    ;;
+log|logs) 
+    docker logs $CONTAINER 
+    ;;
+build)
+    ./BuildImage $IMAGE
+    ;;
+restart)
+    $0 kill $CONTAINER
+    $0 start $CONTAINER $OTHER_PARAMS
+    ;;
+image)
+    if [[ $2 == 'prune' ]]; then
+        NONE_IMAGES=$(docker images -q --filter "dangling=true") 
+        if [[ -n $NONE_IMAGES ]]; then
+            docker image rm -f $(docker images -q --filter "dangling=true")
+        fi
+    fi
+    ;;
+system)
+    if [[ $2 == 'prune' ]]; then
+        $0 image prune
+        docker system prune
+    fi
+    ;;
+tag)
+    if [[ -n $3 ]]; then
+        tag=$3
+        echo "docker tag $DOCKER_ID/$2:$DEFAULT_TAG $DOCKER_ID/$IMAGE:$tag"
+        docker tag $DOCKER_ID/$IMAGE:$DEFAULT_TAG $DOCKER_ID/$IMAGE:$tag
+    fi
+    ;;
+push)                     
+    tag=$DEFAULT_TAG
+    if [[ -n $3 ]]; then tag=$3; fi
+        echo "docker push $DOCKER_ID/$IMAGE:$tag"
+        docker push $DOCKER_ID/$IMAGE:$tag
+    ;;
+init)
+    if [[ -n $(which zsh) ]]; then
+        touch ~/.zshrc
+        fpath="fpath=($(pwd)/$SCRIPT_PATH \$fpath)"
+
+        sed 's/autoload -U compinit; compinit//' ~/.zshrc > /tmp/zshrc
+        cp /tmp/zshrc ~/.zshrc
+
+        echo $fpath >> ~/.zshrc
+        echo 'autoload -U compinit; compinit' >> ~/.zshrc
+    else
+        echo 'ERROR: You need install ZSH.'
+    fi
+    ;;
+
+help)
+    echo "You can run commands:
+
+        start [image]            -- create or start container and connect to bash
+        stop [image]             -- stop container
+        kill [image]             -- stop and remove container
+        restart [image]          -- restart container
+        logs [image]             -- show logs of container
+        rm [image]               -- rm exists container
+        build [image]            -- run BuildImage script
+        image prune              -- clean system from old images  
+        system prune             -- clean system 
+        tag [image] [tag]        -- create tag
+        push [image] {tag}       -- push image to dockerhub 
+        init                     -- initialize autocomplete 
+
+
+        Examples:
+        ./dockerManager start python
+        ./dockerManager kill python
+        ./dockerManager tag python 3.4     
+        ./dockerManager push python 3.4     
+
+
+"
+
+
+esac
