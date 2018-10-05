@@ -1,4 +1,10 @@
-FROM debian:9
+FROM debian:9.1
 
 # install tools
-RUN apt-get update && apt-get install -y curl make gcc software-properties-common vim wget nmap 
+RUN apt-get update && apt-get install -y curl make gcc software-properties-common vim git wget nmap telnet gnupg2 gettext-base
+COPY wait-for /usr/local/bin
+RUN chmod +x /usr/local/bin/wait-for
+
+#WORKDIR /root/
+
+

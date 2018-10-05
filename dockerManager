@@ -13,7 +13,7 @@ OTHER_PARAMS="$(echo $@ | cut -d' ' -f3-) "
 IMAGE=$(echo $2 | sed -e "s/\///g")
 CONTAINER=$(echo $IMAGE | sed -e "s/-/_/g")_dev
 COMMAND=$1
-DOCKER_ID=teamzeus
+DOCKER_ID=applemann
 DEFAULT_TAG=latest
 
 if [[ -z $IMAGE ]]; then 
