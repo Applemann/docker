@@ -1,0 +1,10 @@
+nastaveni databaze:
+
+docker run --name=mysql -p 3306:3306 mysql/mysql-server:5.7
+alter USER 'root'@'localhost' IDENTIFIED BY 'heslo123';
+create USER 'root'@'%' IDENTIFIED BY 'heslo123';
+GRANT ALL PRIVILEGES ON * . * TO 'root'@'%';
+
+
+docker stop mysql 
+docker start mysql 
