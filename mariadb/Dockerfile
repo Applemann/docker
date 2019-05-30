@@ -1,4 +1,4 @@
-FROM applemann/base-image:latest
+FROM simpleservices/base-image:latest
 
 # install database
 RUN apt-get install -y apt-transport-https                                                                               \

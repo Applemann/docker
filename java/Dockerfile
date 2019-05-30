@@ -1,4 +1,4 @@
-FROM applemann/base-image:latest
+FROM simpleservices/base-image:latest
 
 # install java 8
 RUN apt-key adv --recv-keys --keyserver keyserver.ubuntu.com EEA14886                       \ 

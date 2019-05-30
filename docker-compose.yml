@@ -1,0 +1,20 @@
+version: '3'
+services:
+  base-image:
+    image: simpleservices/base-image:latest
+    build: ./base-image
+    #  java:
+    #    image: simpleservices/java:8
+    #    build: ./java
+  python2:
+    image: simpleservices/python2:latest
+    build: ./python2 
+  python3:
+    image: simpleservices/python3:latest
+    build: ./python3
+  mariadb:
+    image: simpleservices/mariadb:latest
+    build: ./mariadb
+
+    
+
