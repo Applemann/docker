@@ -5,6 +5,6 @@ RUN apt-get update && apt-get install -y curl make gcc software-properties-commo
 COPY wait-for /usr/local/bin
 RUN chmod +x /usr/local/bin/wait-for
 
-#WORKDIR /root/
+WORKDIR /root/
 
 
