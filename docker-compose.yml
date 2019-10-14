@@ -6,6 +6,9 @@ services:
     #  java:
     #    image: simpleservices/java:8
     #    build: ./java
+  golang:
+    image: simpleservices/golang:1.13
+    build: ./golang
   python2:
     image: simpleservices/python2:latest
     build: ./python2 
