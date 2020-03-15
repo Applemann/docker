@@ -16,7 +16,7 @@ services:
     image: simpleservices/mariadb:latest
     build: ./mariadb
   nodejs:
-    image: simpleservices/nodejs:10
+    image: simpleservices/nodejs:12
     build: ./nodejs
 
     
